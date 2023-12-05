@@ -8,6 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with Feather Wiki. If not, see https://www.gnu.org/licenses/.
  */
 import { handleTab } from './helpers/handleTab';
+import { saveFileGCS } from "../firebase.js";
 
 export const initEmitter = (state, emitter) => {
   const { events, help, root, views } = state;
@@ -214,7 +215,51 @@ export const initEmitter = (state, emitter) => {
   });
 
   if (process.env.SERVER) {
-    emitter.on(events.PUT_SAVE_WIKI, () => {
+    //save to firebase storage
+    emitter.on(events.PUT_SAVE_WIKI, async () => {
+      const output = FW.gen(state);
+      const { p } = state;
+
+      try{
+        const ms = state.root.split('/');
+        const blob = new Blob([output], { type : 'text/html' });
+        const url = await saveFileGCS(ms[ms.length-1], blob);
+
+        console.log(url);
+        emit(events.NOTIFY, 'Saved.')
+        state.prev = FW.hash.object(p);
+        emit(events.CHECK_CHANGED);
+      }
+      catch(err) {
+        emit(events.NOTIFY, `Save failed! ${err}`, 9999, 'background:#e88');
+      }
+    });
+  
+    //use await instead of then
+    emitter.on(events.PUT_SAVE_WIKI2, async () => {
+      const output = FW.gen(state);
+      const { p } = state;
+
+      try{
+        const resp = await fetch(root, { method: 'PUT', body: output });
+        const text = await resp.text();
+        const result = { ok: resp.ok, status: resp.status, text: text };
+
+        if (!result.ok) throw result.text ? result.text : `Status ${result.status}.`;
+
+        emit(events.NOTIFY, 'Saved.')
+
+        state.prev = FW.hash.object(p);
+        emit(events.CHECK_CHANGED);
+      }
+      catch(err) {
+        emit(events.NOTIFY, `Save failed! ${err}`, 9999, 'background:#e88');
+      }
+
+    });
+
+    //original
+    emitter.on(events.PUT_SAVE_WIKI3, () => {
       const output = FW.gen(state);
       const { p } = state;
       fetch(root, { method: 'PUT', body: output })
@@ -233,7 +278,40 @@ export const initEmitter = (state, emitter) => {
         });
     });
 
+    //always true
     emitter.on(events.DETECT_PUT_SUPPORT, () => {
+      // Assumptions:
+      // * build make process.env.SERVER === true
+      // * This only needs to run once at startup
+      // * There's no need to turn it off again once it's set
+      // * If any 'dav' header is present then a put save could work
+      if (!location.protocol.startsWith('http') || state.canSave) return;
+      state.canSave = true;
+      emit(events.RENDER);
+    });
+  
+      //use POST instead of OPTIONS
+    emitter.on(events.DETECT_PUT_SUPPORT2, () => {
+      // Assumptions:
+      // * build make process.env.SERVER === true
+      // * This only needs to run once at startup
+      // * There's no need to turn it off again once it's set
+      // * If any 'dav' header is present then a put save could work
+      if (!location.protocol.startsWith('http') || state.canSave) return;
+      fetch(root, { method: 'POST', body: 'OPTIONS' })
+        .then(resp => {
+          if (resp.ok && resp.headers.get('dav')) {
+            state.canSave = true;
+            emit(events.RENDER);
+          } else {
+            emit(events.NOTIFY, 'Cannot save to server.', 9999, 'background:#e88');
+          }
+        })
+        .catch(err => {})
+    });
+
+    //original
+    emitter.on(events.DETECT_PUT_SUPPORT3, () => {
       // Assumptions:
       // * build make process.env.SERVER === true
       // * This only needs to run once at startup

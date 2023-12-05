@@ -99,6 +99,10 @@ export const initState = state => {
       ...state.events,
       PUT_SAVE_WIKI: 'psw',
       DETECT_PUT_SUPPORT: 'dps',
+      PUT_SAVE_WIKI2: 'psw2',
+      DETECT_PUT_SUPPORT2: 'dps2',
+      PUT_SAVE_WIKI3: 'psw3',
+      DETECT_PUT_SUPPORT3: 'dps3',
     };
   }
 

@@ -73,7 +73,25 @@ Choo.prototype.start = function () {
     el?.scrollIntoView();
     return true;
   }
+
+  const addParamsToUrl = (url, paramsObject) => {
+    const match = url.match(/\?(.*)/);
+    const existingParams = match ? match[1] : '';
+    const existingParamsObject = Object.fromEntries(new URLSearchParams(existingParams));
+    
+    const mergedParamsObject = { ...paramsObject, ...existingParamsObject };
+    
+    const mergedParamsString = Object.entries(mergedParamsObject)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+    
+    const updatedUrl = match ? url.replace(/\?.*/, `?${mergedParamsString}`) : `${url}?${mergedParamsString}`;
+    return updatedUrl;
+  }
+
   this.emitter.prependListener(this._events.GO, (to = null, action = 'push') => {
+    to = addParamsToUrl(to, this.state.query);
+
     if (to) {
       history[action + 'State'](HISTORY, this.state.title, to)
     }

@@ -20,7 +20,7 @@ esbuild.build({
   define: {
     'process.env.NODE_ENV': '"development"',
     'process.env.NODE_DEBUG': '"debug"',
-    'process.env.SERVER': 'false',
+    'process.env.SERVER': 'true',
   },
   sourcemap: 'inline',
   write: false,
@@ -119,9 +119,57 @@ async function writeHtmlOutput (html) {
 
 async function startServer () {
   const server = http.createServer((req, res) => {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-  
-    res.end(fs.readFileSync(outputFilePath));
+    if (req.method == 'OPTIONS') {
+      res.writeHead(200, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'PUT, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Content-Length, X-Requested-With',
+        'dav': '1',
+      });
+      res.end();
+    }
+    else if (req.method == 'PUT') {
+      let body = '';
+      req.on('data', chunk => {
+        body += chunk.toString();
+      });
+      req.on('end', () => {
+        fs.writeFile(outputFilePath, body, (err) => {
+          if (err) throw err;
+          console.log('Saved!');
+          res.writeHead(200, {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'PUT, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Content-Length, X-Requested-With',
+            'dav': '1',
+          });
+          res.end("saved");
+        });
+      });
+    }
+    else if (req.method == 'POST') {
+      let body = '';
+      req.on('data', chunk => {
+        body += chunk.toString();
+      });
+      req.on('end', () => {
+        // Process the body here
+        console.log('Received body:', body);
+        if (body == 'OPTIONS') {
+          res.writeHead(200, {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'PUT, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Content-Length, X-Requested-With',
+            'dav': '1',
+          });
+        }
+        res.end();
+      });
+    }
+    else {
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(fs.readFileSync(outputFilePath));
+    }
   });
   server.listen(3000, 'localhost');
   console.log('Node server running at http://localhost:3000');
