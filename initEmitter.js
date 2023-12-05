@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with Feather Wiki. If not, see https://www.gnu.org/licenses/.
  */
 import { handleTab } from './helpers/handleTab';
-import { saveFileGCS } from "../firebase.js";
+import { saveFileGCS } from "../firebaseConfig";
 
 export const initEmitter = (state, emitter) => {
   const { events, help, root, views } = state;
