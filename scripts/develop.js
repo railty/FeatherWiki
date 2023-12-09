@@ -11,6 +11,7 @@ import path from 'path';
 import fs from 'fs';
 import http from 'http';
 import esbuild from 'esbuild';
+import express from 'express';
 
 const outputDir = path.resolve(process.cwd(), 'develop');
 const outputFilePath = path.resolve(outputDir, 'index.html');
@@ -116,8 +117,43 @@ async function writeHtmlOutput (html) {
     console.info(outputFilePath, outputKb.toFixed(3) + ' kilobytes');
   });
 }
-
 async function startServer () {
+  const app = express()
+  const port = 3000
+
+  app.use(express.static('develop'))
+
+  app.put('*', (req, res) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      const outputDir = path.resolve(process.cwd(), 'develop');
+      let fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+      const url = new URL(fullUrl);
+      const filePath = path.join(outputDir, url.pathname === "/" ? 'index.html' : url.pathname);
+
+      fs.writeFile(filePath, body, (err) => {
+        if (err) throw err;
+        console.log('Saved!');
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'PUT, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Content-Length, X-Requested-With',
+          'dav': '1',
+        });
+        res.end("saved");
+      });
+    });
+  });
+
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+  })
+}
+
+async function startServer2 () {
   const server = http.createServer((req, res) => {
     if (req.method == 'OPTIONS') {
       res.writeHead(200, {
@@ -134,7 +170,13 @@ async function startServer () {
         body += chunk.toString();
       });
       req.on('end', () => {
-        fs.writeFile(outputFilePath, body, (err) => {
+        let filePath = path.join(outputDir, req.url);
+        const exists = fs.existsSync(filePath);
+        if (!exists){
+          filePath = outputFilePath;
+        }
+
+        fs.writeFile(filePath, body, (err) => {
           if (err) throw err;
           console.log('Saved!');
           res.writeHead(200, {
@@ -167,8 +209,19 @@ async function startServer () {
       });
     }
     else {
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(fs.readFileSync(outputFilePath));
+      const filePath = path.join(outputDir, req.url);
+
+      const exists = fs.existsSync(filePath);
+      if (exists){
+        const ext = path.extname(filePath);
+        if (ext === '.html') res.writeHead(200, { 'Content-Type': 'text/html' });
+        else if (ext === '.js') res.writeHead(200, { 'Content-Type': 'text/javascript; charset=UTF-8' });
+        res.end(fs.readFileSync(filePath));  
+      }
+      else {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(fs.readFileSync(outputFilePath));
+      }
     }
   });
   server.listen(3000, 'localhost');

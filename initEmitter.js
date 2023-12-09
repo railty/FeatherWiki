@@ -196,8 +196,8 @@ export const initEmitter = (state, emitter) => {
     delete state.notis[i];
   });
 
-  emitter.on(events.SAVE_WIKI, () => {
-    const output = FW.gen(state);
+  emitter.on(events.SAVE_WIKI, async () => {
+    const output = await FW.gen(state);
     const { p } = state;
     const el = document.createElement('a');
     el.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(output));
@@ -217,7 +217,7 @@ export const initEmitter = (state, emitter) => {
   if (process.env.SERVER) {
     //save to firebase storage
     emitter.on(events.PUT_SAVE_WIKI, async () => {
-      const output = FW.gen(state);
+      const output = await FW.gen(state, true);
       const { p } = state;
 
       try{
@@ -236,8 +236,8 @@ export const initEmitter = (state, emitter) => {
     });
   
     //use await instead of then
-    emitter.on(events.PUT_SAVE_WIKI2, async () => {
-      const output = FW.gen(state);
+    emitter.on(events.PUT_SAVE_WIKI1, async () => {
+      const output = await FW.gen(state, true);
       const { p } = state;
 
       try{

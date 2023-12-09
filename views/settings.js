@@ -60,9 +60,18 @@ export const settingsView = (state, emit) => {
         </p>
       </div>
       ${ gallery(state, emit, { showDelete: true, showUsed: true })}
+      
+      <button class=del onclick=${async () => {
+        console.log("test");
+        const hexString = await encrypt("abcd", key);
+
+        const text2 = await decrypt(hexString, key2);
+        console.log(text2);
+      }}>Test</button>
+
     </article>`
   ];
-
+  
   function saveSettings(e) {
     e.preventDefault();
     const form = e.currentTarget;

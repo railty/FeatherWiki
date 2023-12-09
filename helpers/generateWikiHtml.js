@@ -9,10 +9,18 @@
  */
 
 import { globalView } from "../views/global";
+import { encrypt, loadKey } from '../extensions/encryption';
 
 // Generate full html doc for saving. See also index.html
-export default function (state) {
+export default async function (state, enc=false) {
   const { c, p, j } = state;
+  
+  let text = JSON.stringify(FW.json.compress(p));
+  if (enc){
+    const key = await loadKey();
+    text = await encrypt(text, key);
+  }
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +32,7 @@ export default function (state) {
   <meta name="application-name" content="{{package.json: title}}" />
   <style id="s">${document.getElementById('s').innerHTML}</style>
   ${c ? `<style id=c>${c}</style>` : ''}
-  <script id="p" type="application/json">${JSON.stringify(FW.json.compress(p))}</script>
+  <script id="p" type="application/json" encrypt="${enc}">${text}</script>
   <script id="a">${document.getElementById('a').innerHTML}</script>
   ${FW.inject.esc(p.head, true)}
 </head>

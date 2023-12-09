@@ -49,12 +49,13 @@ FW.upload = (mime, cb) => {
   document.body.removeChild(input);
 };
 
-FW.ready(() => {
-	initState(FW.state);
+FW.ready(async () => {
+	await initState(FW.state);
 	initEmitter(FW.state, FW.emitter);
+
+  FW._view = globalView;
+  FW.mount('body');
 });
-FW._view = globalView;
-FW.mount('body');
 
 window.addEventListener('beforeunload', event => {
 	if (FW.state.changed) {

@@ -12,8 +12,9 @@ import { settingsView } from './views/settings';
 import { taggedView } from './views/tagged';
 import { pageView } from './views/page';
 import { missingView } from './views/missing';
+import { decrypt, loadKey } from './extensions/encryption';
 
-export const initState = state => {
+export const initState = async (state) => {
   state.root = location.pathname || '/'; // path to file
   state.sb = false; // show sidebar
   state.sbTab = 'Pages';
@@ -99,6 +100,8 @@ export const initState = state => {
       ...state.events,
       PUT_SAVE_WIKI: 'psw',
       DETECT_PUT_SUPPORT: 'dps',
+      PUT_SAVE_WIKI1: 'psw2',
+      DETECT_PUT_SUPPORT1: 'dps2',
       PUT_SAVE_WIKI2: 'psw2',
       DETECT_PUT_SUPPORT2: 'dps2',
       PUT_SAVE_WIKI3: 'psw3',
@@ -117,7 +120,18 @@ export const initState = state => {
   state.c = document.querySelector('style#c')?.innerHTML ?? '';
   state.j = document.querySelector('script#j')?.innerHTML ?? '';
   try {
-    state.p = FW.json.decompress(JSON.parse(document.querySelector('script#p').innerHTML));
+    //state.p = FW.json.decompress(JSON.parse(document.querySelector('script#p').innerHTML));
+    const elm = document.querySelector('script#p');
+    const encrypted = elm.attributes['encrypt'];
+
+    if(encrypted && encrypted.value==="true"){
+      const key = await loadKey();
+      const text = await decrypt(elm.innerHTML, key);
+      state.p = FW.json.decompress(JSON.parse(text));
+    }
+    else{
+      state.p = FW.json.decompress(JSON.parse(elm.innerHTML));
+    }
   } catch (e) {
     state.p = {name:'New Wiki',desc:'',pages:[],img:{}};
   }
