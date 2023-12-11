@@ -100,7 +100,7 @@ export async function decrypt(hexString, key) {
 }
 
 (function encryptionExtension () {
-  if (!window.FW._loaded) return setTimeout(encryptionExtension, 1); // wait until FW is mounted
+  if (!window.FW || !window.FW._loaded) return setTimeout(encryptionExtension, 1); // wait until FW is mounted
   const { state, emitter } = window.FW;
   state.tDepth = 0;
   state.tDepthMax = 20; // Maximum depth to check for transclusion
