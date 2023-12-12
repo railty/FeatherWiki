@@ -119,7 +119,7 @@ export async function decrypt(hexString, key) {
 
     if (!!document.getElementById('testButton')) return;
     const button = html`
-    <button id="testButton" class=del onclick=${async () => {
+    <button id="testButton" class="btn btn-primary" onclick=${async () => {
       console.log("test");
       const key = await loadKey();
       const hexString = await encrypt("abcd", key);

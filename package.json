@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "nodemon scripts/develop.js",
+    "build-tw": "npx tailwindcss -i ./main.css -o ./index.css --watch",
     "build": "node scripts/build.js && copy builds\\FeatherWiki*.html ..\\public\\",
     "test": "npm run build && node scripts/test-build.js"
   },
@@ -24,9 +25,11 @@
     "nanoraf": "^3.1.0"
   },
   "devDependencies": {
+    "daisyui": "^4.4.19",
     "esbuild": "^0.14.54",
     "google-closure-compiler": "^20220502.0.0",
-    "minify-html-literals": "^1.3.5"
+    "minify-html-literals": "^1.3.5",
+    "tailwindcss": "^3.3.6"
   },
   "peerDependencies": {
     "assert": "^2.0.0",
