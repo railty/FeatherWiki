@@ -48,7 +48,7 @@ export const settingsView = (state, emit) => {
         <input id=wPub type=checkbox checked=${p.published ?? false}>
         <span class=h>Hides Save, New Page, & Wiki Settings buttons. You will need to manually visit <code>?page=s</code> to unset this when set.</span>
         <div class=tr>
-          <button type="submit">Update</button>
+          <button class="btn btn-primary" type="submit">Update</button>
         </div>
       </form>
       <div class=tr>
