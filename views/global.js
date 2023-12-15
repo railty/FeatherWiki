@@ -45,11 +45,13 @@ export const globalView = (state, emit) => {
       ...saveButton,
       html`<div><button class=${changed ? 'chg' : ''} title="Save wiki to ${location.origin}${root}" onclick=${() => emit(events.PUT_SAVE_WIKI)}>Save Wiki to Server</button></div>`,
       html`<div><button title="Download wiki in its current state" onclick=${() => emit(events.SAVE_WIKI)}>Save Wiki Locally</button></div>`,
+      html`<div><button class=${changed ? 'chg btn btn-primary' : 'btn btn-primary'} title="Save in localStorage" onclick=${() => emit(events.SAVE_WIKI_LS)}>Save in localStorage</button></div>`,
     ]
   } else {
     saveButton = [
       ...saveButton,
       html`<div><button class=${changed ? 'chg' : ''} title="Download wiki in its current state" onclick=${() => emit(events.SAVE_WIKI)}>Save Wiki</button></div>`,
+      html`<div><button class=${changed ? 'chg btn btn-primary' : 'btn btn-primary'} title="Save in localStorage" onclick=${() => emit(events.SAVE_WIKI_LS)}>Save in localStorage</button></div>`,
     ]
   }
 
@@ -70,7 +72,7 @@ export const globalView = (state, emit) => {
                 <form onsubmit=${createNewPage}>
                   <label class=sr for=np>New Page Title</label>
                   <input id=np placeholder="New Page Title" autocomplete=off>
-                  <button type=submit>Create</button>
+                  <button class="btn btn-primary" type=submit>Create</button>
                 </form>
               </details>`
             ] : ''

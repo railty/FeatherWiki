@@ -77,7 +77,7 @@ export const pageEdit = (state, emit, page) => {
         <label>Hide Page <input type=checkbox id=hide onchange=${e => state.edits.hide = e.target.checked} checked=${edits.hide} /></label>
       </div>
       <div class="c w13 tr">
-        <div class=pb><button type=submit>Save</button></div>
+        <div class=pb><button class="btn btn-primary" type=submit>Save</button></div>
         ${
           !isNew
           ? [

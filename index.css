@@ -197,7 +197,7 @@ abbr[title] {
   color: #fff;
 }
 
-@media(min-width:50rem) {
+@media(min-width:40rem) {
   /* row */
 
   .r, main {

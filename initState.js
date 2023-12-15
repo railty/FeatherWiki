@@ -92,6 +92,7 @@ export const initState = async (state) => {
     COLLECT_TAGS: 'ct',
     CHECK_CHANGED: 'cc',
     SAVE_WIKI: 'sw',
+    SAVE_WIKI_LS: 'swl',
     NOTIFY: 'n',
     REMOVE_NOTI: 'rn',
   };

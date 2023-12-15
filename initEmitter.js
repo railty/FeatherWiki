@@ -9,6 +9,7 @@
  */
 import { handleTab } from './helpers/handleTab';
 import { saveFileGCS } from "../firebaseConfig";
+import { StorageBook } from '../src/clsBook';
 
 export const initEmitter = (state, emitter) => {
   const { events, help, root, views } = state;
@@ -212,6 +213,16 @@ export const initEmitter = (state, emitter) => {
       state.prev = FW.hash.object(p);
       emit(events.CHECK_CHANGED);
     }
+  });
+
+  emitter.on(events.SAVE_WIKI_LS, async () => {
+    const ms = location.hash.match(/#id=(.*)/);
+    if (ms) {
+      const id = ms[1];
+      const output = await FW.gen(state);
+      console.log(output);
+      await StorageBook.update(id, output);
+      emit(events.NOTIFY, 'Saved to localStorage.');    }
   });
 
   if (process.env.SERVER) {
