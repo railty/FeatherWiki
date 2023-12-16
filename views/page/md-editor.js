@@ -24,9 +24,9 @@ export const editor = (state) => {
   textChange({ target });
   return [
     target,
-    html`<button onclick=${e => {e.preventDefault(); preview.style.display = preview.style.display == 'none' ? 'block' : 'none';}}>Preview</button>`,
-    html`<button onclick=${e => {e.preventDefault(); FW.img.upload(state, insert)}}>Insert Image from File</button>`,
-    html`<button onclick=${e => {e.preventDefault(); document.getElementById('g').showModal()}}>Add Existing Image</button>`,
+    html`<button class='btn btn-primary' onclick=${e => {e.preventDefault(); preview.style.display = preview.style.display == 'none' ? 'block' : 'none';}}>Preview</button>`,
+    html`<button class='btn btn-primary' onclick=${e => {e.preventDefault(); FW.img.upload(state, insert)}}>Insert Image from File</button>`,
+    html`<button class='btn btn-primary' onclick=${e => {e.preventDefault(); document.getElementById('g').showModal()}}>Add Existing Image</button>`,
     preview,
     modal(state, insert),
   ];

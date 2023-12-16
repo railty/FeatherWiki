@@ -118,6 +118,9 @@ async function writeHtmlOutput (html) {
   });
 }
 async function startServer () {
+}
+
+async function startServer1 () {
   const app = express()
   const port = 3000
 

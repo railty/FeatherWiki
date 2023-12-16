@@ -216,13 +216,15 @@ export const initEmitter = (state, emitter) => {
   });
 
   emitter.on(events.SAVE_WIKI_LS, async () => {
-    const ms = location.hash.match(/#id=(.*)/);
-    if (ms) {
-      const id = ms[1];
-      const output = await FW.gen(state);
-      console.log(output);
-      await StorageBook.update(id, output);
-      emit(events.NOTIFY, 'Saved to localStorage.');    }
+    const bookId = (new URLSearchParams(location.search)).get('storageId')
+    if (bookId) {
+      //const output = await FW.gen(state);
+      const output = JSON.stringify(state.p);
+      StorageBook.update(bookId, output);
+      emit(events.NOTIFY, 'Saved to localStorage.');    
+      state.prev = FW.hash.object(state.p);
+      emit(events.CHECK_CHANGED);
+    }
   });
 
   if (process.env.SERVER) {

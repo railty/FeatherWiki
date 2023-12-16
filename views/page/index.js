@@ -40,7 +40,7 @@ export const pageView = (state, emit, page) => {
             </time>
           ${
             !p.published
-            ? html`<button onclick=${() => emit(events.START_EDIT)}>Edit</button>
+            ? html`<button class="btn btn-primary" onclick=${() => emit(events.START_EDIT)}>Edit</button>
             `
             : ''
           }

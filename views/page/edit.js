@@ -81,7 +81,7 @@ export const pageEdit = (state, emit, page) => {
         ${
           !isNew
           ? [
-            html`<div class=pb><button onclick=${e => {e.preventDefault(); emit(events.CANCEL_EDIT)}}>Cancel</button></div>`,
+            html`<div class=pb><button class="btn btn-secondary" onclick=${e => {e.preventDefault(); emit(events.CANCEL_EDIT)}}>Cancel</button></div>`,
             html`<div><button class=del onclick=${e => deletePage(e)}>Delete</button></div>`,
           ] : ''
         }

@@ -32,7 +32,7 @@ export function img (content, includeId = false) {
   let c = content ?? null;
   if (c) {
     (content?.match(/img:.+?(?=:img)/g) ?? []).forEach(idMatch => {
-      id = idMatch.replace('img:', '');
+      const id = idMatch.replace('img:', '');
       const i = FW.state.p.img[id];
       if (typeof i !== 'undefined') {
         c = c.replace(
