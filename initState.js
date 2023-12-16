@@ -127,7 +127,7 @@ export const initState = async (state) => {
     if (bookId) {
       const book = StorageBook.load(bookId);
       console.log(book);
-      state.p = JSON.parse(book.p);
+      state.p = JSON.parse(book.p) || {name:'New Wiki',desc:'',pages:[],img:{}};
     }
     else{
       const elm = document.querySelector('script#p');
