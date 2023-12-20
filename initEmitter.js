@@ -229,7 +229,7 @@ export const initEmitter = (state, emitter) => {
 
   if (process.env.SERVER) {
     //save to firebase storage
-    emitter.on(events.PUT_SAVE_WIKI, async () => {
+    emitter.on(events.PUT_SAVE_WIKI1, async () => {
       const output = await FW.gen(state, true);
       const { p } = state;
 
@@ -249,7 +249,7 @@ export const initEmitter = (state, emitter) => {
     });
   
     //use await instead of then
-    emitter.on(events.PUT_SAVE_WIKI1, async () => {
+    emitter.on(events.PUT_SAVE_WIKI, async () => {
       const output = await FW.gen(state, true);
       const { p } = state;
 

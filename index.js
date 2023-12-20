@@ -18,6 +18,7 @@ import * as img from './helpers/handleImage';
 import * as hash from './helpers/hashString';
 import * as inject from './helpers/injection';
 import * as json from './helpers/jsonCompress';
+import "./index.css";
 
 // Populate window with dependencies and helpers before starting app
 window.html = require('nanohtml');

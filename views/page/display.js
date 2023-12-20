@@ -44,7 +44,7 @@ export const pageDisplay = (state, page) => {
         </dl>
       </aside>`
       : '',
-    html`<article class=uc>
+    html`<article class="prose uc">
       ${ c ? html.raw(c) : 'No Page Content' }
     </article>`,
     children.length > 0 ? html`<footer>

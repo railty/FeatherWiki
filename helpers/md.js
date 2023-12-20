@@ -1,5 +1,4 @@
 import { marked } from 'marked';
-import '../node_modules/gfm.css/gfm.css'
 
 const reference = {
   name: 'reference',
