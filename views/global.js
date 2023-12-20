@@ -45,6 +45,7 @@ export const globalView = (state, emit) => {
       ...saveButton,
       html`<div><button class=${changed ? 'chg btn btn-primary' : ' btn btn-primary'} title="Save wiki to ${location.origin}${root}" onclick=${() => emit(events.PUT_SAVE_WIKI)}>Save Wiki to Server</button></div>`,
       html`<div><button class="btn btn-primary" title="Download wiki in its current state" onclick=${() => emit(events.SAVE_WIKI)}>Download</button></div>`,
+      html`<div><button class="btn btn-primary" title="Download wiki in JSON" onclick=${() => emit(events.SAVE_WIKI_JSON)}>Download JSON</button></div>`,
       html`<div><button class=${changed ? 'chg btn btn-primary' : 'btn btn-primary'} title="Save in localStorage" onclick=${() => emit(events.SAVE_WIKI_LS)}>Save in localStorage</button></div>`,
     ]
   } else {

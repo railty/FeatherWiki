@@ -214,9 +214,28 @@ export const initEmitter = (state, emitter) => {
       emit(events.CHECK_CHANGED);
     }
   });
+  
+  emitter.on(events.SAVE_WIKI_JSON, async () => {
+    const { p } = state;
+    const output = JSON.stringify(p.pages, null, 2);
+    const el = document.createElement('a');
+    el.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(output));
+    const filename = /\/$/.test(root) ? 'index.json' : decodeURI(root.substring(root.lastIndexOf('/') + 1));
+    el.setAttribute('download', filename);
+    document.body.appendChild(el);
+    el.click();
+    document.body.removeChild(el);
+
+    if (!process.env.SERVER) {
+      // Only clear the "save needed" indicator on server save
+      state.prev = FW.hash.object(p);
+      emit(events.CHECK_CHANGED);
+    }
+  });
 
   emitter.on(events.SAVE_WIKI_LS, async () => {
-    const bookId = (new URLSearchParams(location.search)).get('storageId')
+    //const bookId = (new URLSearchParams(location.search)).get('storageId')
+    const bookId = location.pathname.replaceAll('/', '');
     if (bookId) {
       //const output = await FW.gen(state);
       const output = JSON.stringify(state.p);

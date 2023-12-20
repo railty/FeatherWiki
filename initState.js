@@ -94,6 +94,7 @@ export const initState = async (state) => {
     CHECK_CHANGED: 'cc',
     SAVE_WIKI: 'sw',
     SAVE_WIKI_LS: 'swl',
+    SAVE_WIKI_JSON: 'SAVE_WIKI_JSON',
     NOTIFY: 'n',
     REMOVE_NOTI: 'rn',
   };
@@ -123,7 +124,8 @@ export const initState = async (state) => {
   state.j = document.querySelector('script#j')?.innerHTML ?? '';
   try {
     //state.p = FW.json.decompress(JSON.parse(document.querySelector('script#p').innerHTML));
-    const bookId = (new URLSearchParams(location.search)).get('storageId')
+    //const bookId = (new URLSearchParams(location.search)).get('storageId')
+    const bookId = location.pathname.replaceAll('/', '');
     if (bookId) {
       const book = StorageBook.load(bookId);
       console.log(book);

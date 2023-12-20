@@ -29,7 +29,7 @@ const main = async ()=>{
   const js = new TextDecoder().decode(result.outputFiles[0].contents);
   const css = new TextDecoder().decode(result.outputFiles[1].contents);
   
-  console.log(css);
+  //console.log(css);
 
   const fileName = path.relative(process.cwd(), 'index.html');
   let html = await fs.promises.readFile(fileName, 'utf8');
