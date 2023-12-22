@@ -129,7 +129,7 @@ export const initState = async (state) => {
     if (bookId) {
       const book = StorageBook.load(bookId);
       console.log(book);
-      state.p = JSON.parse(book.p) || {name:'New Wiki',desc:'',pages:[],img:{}};
+      state.p = book.p || {name:'New Wiki',desc:'',pages:[],img:{}};
     }
     else{
       const elm = document.querySelector('script#p');
@@ -151,7 +151,8 @@ export const initState = async (state) => {
   
   // determine last-used editor
   const lastModified = state.p.pages.find(p => p.id === state.recent[0]?.p);
-  state.useMd = lastModified?.editor === 'md';
+  //state.useMd = lastModified?.editor === 'md';
+  state.useMd = true;
 
   state.t = []; // all used tags
   state.prev = FW.hash.object(state.p); // Hash of state at last save

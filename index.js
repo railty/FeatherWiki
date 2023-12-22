@@ -24,7 +24,7 @@ import "./index.css";
 window.html = require('nanohtml');
 html.raw = require('nanohtml/raw');
 window.ed = require('./helpers/ed').default;
-window.md = require('./helpers/md').default;
+window.md = require('../src/md').default;
 
 // Reminder: outlinks require `target="_blank"` *and* `rel="noopener noreferrer"`
 window.FW = Choo();
